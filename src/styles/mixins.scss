@@ -1,0 +1,55 @@
+// --- Media Queries (Adaptive) ---
+
+// Mobile phones (up to 600px)
+@mixin mobile {
+  @media (max-width: 599px) {
+    @content;
+  }
+}
+
+// Tablets (up to 960px)
+@mixin tablet {
+  @media (max-width: 959px) {
+    @content;
+  }
+}
+
+// --- Layout Helpers ---
+
+// Fast flex center (we use it all the time)
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Quick flex "spread to edges" (for column headers)
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// --- UI Helpers ---
+
+// Nice scrollbar (like Trello)
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
