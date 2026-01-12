@@ -17,7 +17,33 @@
           @for (task of column.tasks; track task.id) {
             <div class="task-box" cdkDrag>
               {{ task.title }}
+              <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
             </div>
+          }
+        </div>
+
+        <div class="add-task-footer">
+          @if (activeColumnId === column.id) {
+            <div class="add-form">
+              <textarea
+                [(ngModel)]="newTaskTitle"
+                placeholder="Enter a title for this card..."
+                rows="3"
+                class="input-area"
+                (keydown.enter)="addTask(column); $event.preventDefault()"
+              ></textarea>
+
+              <div class="actions">
+                <button (click)="addTask(column)" class="btn-add">
+                  Add Card
+                </button>
+                <button (click)="cancelAdd()" class="btn-close">&times;</button>
+              </div>
+            </div>
+          } @else {
+            <button class="btn-show-add" (click)="showAddForm(column.id)">
+              + Add a card
+            </button>
           }
         </div>
       </div>

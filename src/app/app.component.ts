@@ -1,6 +1,7 @@
 import {
   CdkDrag,
   CdkDragDrop,
+  CdkDragPlaceholder,
   CdkDropList,
   CdkDropListGroup,
   moveItemInArray,
@@ -8,8 +9,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
-import { Board, Task } from '@core/models/board.model';
+import { Board, Column, Task } from '@core/models/board.model';
 
 @Component({
   selector: 'app-root',
@@ -19,6 +21,8 @@ import { Board, Task } from '@core/models/board.model';
     CdkScrollable,
     CdkDropList,
     CdkDrag,
+    CdkDragPlaceholder,
+    FormsModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
@@ -49,6 +53,36 @@ export class AppComponent {
       },
     ],
   };
+
+  // Store the column ID where the form is currently open
+  // null = not open anywhere
+  public activeColumnId: string | null = null;
+
+  public newTaskTitle: string = '';
+
+  public showAddForm(columnId: string): void {
+    this.activeColumnId = columnId;
+    this.newTaskTitle = '';
+  }
+
+  public cancelAdd(): void {
+    this.activeColumnId = null;
+    this.newTaskTitle = '';
+  }
+
+  public addTask(column: Column): void {
+    if (!this.newTaskTitle.trim()) return;
+
+    const newTask = {
+      id: crypto.randomUUID(),
+      title: this.newTaskTitle,
+    };
+
+    column.tasks.push(newTask);
+
+    this.newTaskTitle = '';
+    this.activeColumnId = null;
+  }
 
   public drop(event: CdkDragDrop<Task[]>): void {
     if (event.previousContainer === event.container) {
