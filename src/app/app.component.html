@@ -1,90 +1,106 @@
-<div class="board">
-  <div class="board-header">
-    <h1>🚀 TaskFlow</h1>
-  </div>
-
-  <div class="board-wrapper" cdkDropListGroup cdkScrollable>
-    @for (column of board.columns; track column.id) {
-      <div class="column-container">
-        <div class="column-header">
-          <h2>{{ column.title }}</h2>
-          <button class="btn-delete-col" (click)="deleteColumn(column.id)">
-            🗑️
-          </button>
-        </div>
-        <div
-          cdkDropList
-          [cdkDropListData]="column.tasks"
-          class="task-list"
-          (cdkDropListDropped)="drop($event)"
-        >
-          @for (task of column.tasks; track task.id) {
-            <div class="task-box" cdkDrag>
-              <span>{{ task.title }}</span>
-
-              <button
-                class="btn-delete-task"
-                (click)="
-                  deleteTask(column.id, task.id); $event.stopPropagation()
-                "
-                title="Delete card"
-              >
-                ×
-              </button>
-
-              <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
-            </div>
-          }
-        </div>
-
-        <div class="add-task-footer">
-          @if (activeColumnId === column.id) {
-            <div class="add-form">
-              <textarea
-                [(ngModel)]="newTaskTitle"
-                placeholder="Enter a title for this card..."
-                rows="3"
-                class="input-area"
-                (keydown.enter)="addTask(column); $event.preventDefault()"
-              ></textarea>
-
-              <div class="actions">
-                <button (click)="addTask(column)" class="btn-add">
-                  Add Card
-                </button>
-                <button (click)="cancelAdd()" class="btn-close">&times;</button>
-              </div>
-            </div>
-          } @else {
-            <button class="btn-show-add" (click)="showAddForm(column.id)">
-              + Add a card
-            </button>
-          }
-        </div>
+@if (authService.user$ | async; as user) {
+  <div class="board">
+    <div class="board-header">
+      <div class="header-left">
+        <h1>🚀 TaskFlow</h1>
+        <span class="welcome">Hi, {{ user.displayName }}! 👋</span>
       </div>
-    }
-    <div class="new-column-block">
-      @if (isAddingColumn) {
-        <div class="new-column-form">
-          <input
-            [(ngModel)]="newColumnTitle"
-            placeholder="Enter list title..."
-            class="input-column"
-            autoFocus
-            (keydown.enter)="addColumn()"
-          />
-          <div class="actions">
-            <button (click)="addColumn()" class="btn-add">Add List</button>
-            <button (click)="isAddingColumn = false" class="btn-close">
-              &times;
+      <button class="btn-logout" (click)="authService.logout()">
+        Logout 🚪
+      </button>
+    </div>
+
+    <div class="board-wrapper" cdkDropListGroup cdkScrollable>
+      @for (column of board.columns; track column.id) {
+        <div class="column-container">
+          <div class="column-header">
+            <h2>{{ column.title }}</h2>
+            <button class="btn-delete-col" (click)="deleteColumn(column.id)">
+              🗑️
             </button>
           </div>
+
+          <div
+            cdkDropList
+            [cdkDropListData]="column.tasks"
+            class="task-list"
+            (cdkDropListDropped)="drop($event)"
+          >
+            @for (task of column.tasks; track task.id) {
+              <div class="task-box" cdkDrag>
+                <span>{{ task.title }}</span>
+                <button
+                  class="btn-delete-task"
+                  (click)="
+                    deleteTask(column.id, task.id); $event.stopPropagation()
+                  "
+                >
+                  ×
+                </button>
+                <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
+              </div>
+            }
+          </div>
+
+          <div class="add-task-footer">
+            @if (activeColumnId === column.id) {
+              <div class="add-form">
+                <textarea
+                  [(ngModel)]="newTaskTitle"
+                  placeholder="Title..."
+                  rows="3"
+                  class="input-area"
+                  (keydown.enter)="addTask(column); $event.preventDefault()"
+                ></textarea>
+                <div class="actions">
+                  <button (click)="addTask(column)" class="btn-add">Add</button>
+                  <button (click)="cancelAdd()" class="btn-close">
+                    &times;
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <button class="btn-show-add" (click)="showAddForm(column.id)">
+                + Add card
+              </button>
+            }
+          </div>
         </div>
-      } @else {
-        <button class="btn-add-column" (click)="isAddingColumn = true">
-          + Add another list
-        </button>
       }
+
+      <div class="new-column-block">
+        @if (isAddingColumn) {
+          <div class="new-column-form">
+            <input
+              [(ngModel)]="newColumnTitle"
+              placeholder="List title..."
+              class="input-column"
+              autoFocus
+              (keydown.enter)="addColumn()"
+            />
+            <div class="actions">
+              <button (click)="addColumn()" class="btn-add">Add List</button>
+              <button (click)="isAddingColumn = false" class="btn-close">
+                &times;
+              </button>
+            </div>
+          </div>
+        } @else {
+          <button class="btn-add-column" (click)="isAddingColumn = true">
+            + Add list
+          </button>
+        }
+      </div>
     </div>
   </div>
-</div>
+} @else {
+  <div class="login-container">
+    <div class="login-box">
+      <h1>🚀 TaskFlow</h1>
+      <p>Organize your projects in real-time.</p>
+      <button class="btn-google" (click)="authService.login()">
+        Sign in with Google
+      </button>
+    </div>
+  </div>
+}
