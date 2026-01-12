@@ -48,5 +48,28 @@
         </div>
       </div>
     }
+    <div class="new-column-block">
+      @if (isAddingColumn) {
+        <div class="new-column-form">
+          <input
+            [(ngModel)]="newColumnTitle"
+            placeholder="Enter list title..."
+            class="input-column"
+            autoFocus
+            (keydown.enter)="addColumn()"
+          />
+          <div class="actions">
+            <button (click)="addColumn()" class="btn-add">Add List</button>
+            <button (click)="isAddingColumn = false" class="btn-close">
+              &times;
+            </button>
+          </div>
+        </div>
+      } @else {
+        <button class="btn-add-column" (click)="isAddingColumn = true">
+          + Add another list
+        </button>
+      }
+    </div>
   </div>
 </div>

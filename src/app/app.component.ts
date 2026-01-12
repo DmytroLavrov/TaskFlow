@@ -58,7 +58,11 @@ export class AppComponent {
   // null = not open anywhere
   public activeColumnId: string | null = null;
 
+  // Is the column creation form open?
+  public isAddingColumn: boolean = false;
+
   public newTaskTitle: string = '';
+  public newColumnTitle: string = '';
 
   public showAddForm(columnId: string): void {
     this.activeColumnId = columnId;
@@ -82,6 +86,19 @@ export class AppComponent {
 
     this.newTaskTitle = '';
     this.activeColumnId = null;
+  }
+
+  public addColumn(): void {
+    if (!this.newColumnTitle.trim()) return;
+
+    this.board.columns.push({
+      id: crypto.randomUUID(),
+      title: this.newColumnTitle,
+      tasks: [],
+    });
+
+    this.newColumnTitle = '';
+    this.isAddingColumn = false;
   }
 
   public drop(event: CdkDragDrop<Task[]>): void {
