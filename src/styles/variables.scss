@@ -1,0 +1,33 @@
+// --- Palette (Colors) ---
+$primary-blue: #0079bf;
+$primary-dark: #026aa7;
+
+$success: #519839;
+$danger: #b04632;
+$warning: #f2d600;
+
+$bg-board: #0079bf; // Default board background
+$bg-column: #ebecf0;
+$bg-card: #ffffff;
+
+$text-dark: #172b4d;
+$text-light: #ffffff;
+$text-muted: #5e6c84;
+
+// --- Spacing ---
+$gap-sm: 4px;
+$gap-md: 8px;
+$gap-lg: 12px;
+$gap-xl: 20px;
+
+// --- Borders & Shadows ---
+$radius-sm: 3px;
+$radius-md: 6px;
+
+$shadow-card: 0 1px 0 rgba(9, 30, 66, 0.25);
+$shadow-hover: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+// --- Fonts ---
+$font-main:
+  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, 'Fira Sans', 'Droid Sans',
+  'Helvetica Neue', sans-serif;
