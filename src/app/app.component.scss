@@ -58,12 +58,28 @@
   }
 }
 
-.column-container h2 {
+.column-header {
+  @include m.flex-between;
+  margin-bottom: v.$gap-md;
+  padding-right: v.$gap-sm;
+}
+
+.btn-delete-col {
+  background: none;
+  border: none;
+  cursor: pointer;
   font-size: 1rem;
-  font-weight: 600;
-  margin: v.$gap-md 0;
-  padding-left: v.$gap-sm;
   color: v.$text-dark;
+  opacity: 0.5;
+  border-radius: v.$radius-sm;
+  transition:
+    opacity 0.2s,
+    color 0.2s;
+
+  &:hover {
+    opacity: 1;
+    color: v.$danger;
+  }
 }
 
 /* =========================
@@ -92,6 +108,31 @@
 
   &:hover {
     box-shadow: v.$shadow-hover;
+
+    .btn-delete-task {
+      opacity: 1;
+    }
+  }
+}
+
+.btn-delete-task {
+  background: none;
+  border: none;
+  color: #6b778c;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0;
+  padding: 0 v.$gap-sm;
+  border-radius: v.$radius-sm;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    opacity 0.2s;
+
+  &:hover {
+    background-color: #ffebe6;
+    color: #de350b;
   }
 }
 

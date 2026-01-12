@@ -101,6 +101,19 @@ export class AppComponent {
     this.isAddingColumn = false;
   }
 
+  public deleteTask(columnId: string, taskId: string): void {
+    const column = this.board.columns.find((c) => c.id === columnId);
+    if (column) {
+      column.tasks = column.tasks.filter((t) => t.id !== taskId);
+    }
+  }
+
+  public deleteColumn(columnId: string): void {
+    if (confirm('Are you sure you want to delete this list?')) {
+      this.board.columns = this.board.columns.filter((c) => c.id !== columnId);
+    }
+  }
+
   public drop(event: CdkDragDrop<Task[]>): void {
     if (event.previousContainer === event.container) {
       // f we drag within one column (change the order)

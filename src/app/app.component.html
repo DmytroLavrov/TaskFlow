@@ -6,8 +6,12 @@
   <div class="board-wrapper" cdkDropListGroup cdkScrollable>
     @for (column of board.columns; track column.id) {
       <div class="column-container">
-        <h2>{{ column.title }}</h2>
-
+        <div class="column-header">
+          <h2>{{ column.title }}</h2>
+          <button class="btn-delete-col" (click)="deleteColumn(column.id)">
+            🗑️
+          </button>
+        </div>
         <div
           cdkDropList
           [cdkDropListData]="column.tasks"
@@ -16,7 +20,18 @@
         >
           @for (task of column.tasks; track task.id) {
             <div class="task-box" cdkDrag>
-              {{ task.title }}
+              <span>{{ task.title }}</span>
+
+              <button
+                class="btn-delete-task"
+                (click)="
+                  deleteTask(column.id, task.id); $event.stopPropagation()
+                "
+                title="Delete card"
+              >
+                ×
+              </button>
+
               <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
             </div>
           }
