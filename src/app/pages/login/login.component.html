@@ -1,0 +1,9 @@
+<div class="login-container">
+  <div class="login-box">
+    <h1>🚀 TaskFlow</h1>
+    <p>Organize your projects in real-time.</p>
+    <button class="btn-google" (click)="login()" [disabled]="isLoading">
+      {{ isLoading ? "Signing in..." : "Sign in with Google" }}
+    </button>
+  </div>
+</div>
