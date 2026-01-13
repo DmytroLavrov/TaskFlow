@@ -10,6 +10,7 @@ import {
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   inject,
   OnDestroy,
@@ -35,11 +36,13 @@ import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BoardComponent implements OnInit, OnDestroy {
   private readonly boardService = inject(BoardService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroy$ = new Subject<void>();
 
   public currentUser: User | null = null;
@@ -77,6 +80,7 @@ export class BoardComponent implements OnInit, OnDestroy {
             } else {
               this.initDefaultBoard(this.currentUser.uid);
             }
+            this.cdr.markForCheck();
           }
         },
         error: (err) => {
@@ -84,6 +88,7 @@ export class BoardComponent implements OnInit, OnDestroy {
           if (this.currentUser) {
             this.initDefaultBoard(this.currentUser.uid);
           }
+          this.cdr.markForCheck();
         },
       });
   }
@@ -109,6 +114,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     if (!this.currentUser) return;
 
     this.board = newBoard;
+    this.cdr.markForCheck();
     this.boardService
       .saveBoard(this.currentUser.uid, newBoard)
       .catch((err) => console.error('Error saving board:', err));
