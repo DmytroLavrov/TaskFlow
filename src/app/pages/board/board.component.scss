@@ -1,5 +1,6 @@
 @use "styles/variables" as v;
 @use "styles/mixins" as m;
+@use "sass:color";
 
 /* =========================
    Board
@@ -199,6 +200,38 @@
       opacity: 1;
     }
   }
+}
+
+.edit-area {
+  width: 100%;
+  border: 2px solid v.$primary-blue;
+  border-radius: v.$radius-sm;
+  padding: v.$gap-sm;
+  font-family: inherit;
+  font-size: inherit;
+  resize: none;
+  box-sizing: border-box;
+  display: block;
+  background-color: v.$bg-card;
+  color: v.$text-dark;
+  outline: none;
+}
+
+.task-title {
+  flex-grow: 1;
+  cursor: pointer;
+  word-wrap: break-word;
+  color: v.$text-dark;
+}
+
+.task-box:hover {
+  background-color: color.adjust(v.$bg-column, $lightness: 5%);
+  box-shadow: v.$shadow-hover;
+}
+
+.task-box:has(.edit-area) {
+  background-color: v.$bg-card;
+  box-shadow: 0 0 0 2px rgba(v.$primary-blue, 0.4);
 }
 
 .btn-delete-task {

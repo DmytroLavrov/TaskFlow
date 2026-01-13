@@ -27,15 +27,33 @@
         >
           @for (task of column.tasks; track task.id) {
             <div class="task-box" cdkDrag>
-              <span>{{ task.title }}</span>
-              <button
-                class="btn-delete-task"
-                (click)="
-                  deleteTask(column.id, task.id); $event.stopPropagation()
-                "
-              >
-                ×
-              </button>
+              @if (editingTaskId === task.id) {
+                <textarea
+                  [(ngModel)]="editingTaskTitle"
+                  class="edit-area"
+                  rows="2"
+                  autoFocus
+                  (keydown.enter)="
+                    saveEditTask(column, task); $event.preventDefault()
+                  "
+                  (keydown.escape)="cancelEditTask()"
+                  (blur)="saveEditTask(column, task)"
+                ></textarea>
+              } @else {
+                <span class="task-title" (click)="startEditTask(task)">
+                  {{ task.title }}
+                </span>
+
+                <button
+                  class="btn-delete-task"
+                  (click)="
+                    deleteTask(column.id, task.id); $event.stopPropagation()
+                  "
+                >
+                  ×
+                </button>
+              }
+
               <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
             </div>
           }

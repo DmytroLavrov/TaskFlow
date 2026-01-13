@@ -45,15 +45,21 @@ export class BoardComponent implements OnInit, OnDestroy {
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly destroy$ = new Subject<void>();
 
+  // --- DATA ---
   public currentUser: User | null = null;
   public board: Board = { title: 'Loading...', columns: [] };
 
-  // UI state
+  // --- UI STATE ---
   public activeColumnId: string | null = null;
   public isAddingColumn = false;
-  public newTaskTitle = '';
-  public newColumnTitle = '';
+  public newTaskTitle: string = '';
+  public newColumnTitle: string = '';
 
+  // --- TASK EDITING STATE ---
+  public editingTaskId: string | null = null;
+  public editingTaskTitle: string = '';
+
+  // --- LIFECYCLE ---
   ngOnInit(): void {
     this.authService.user$
       .pipe(
@@ -78,7 +84,7 @@ export class BoardComponent implements OnInit, OnDestroy {
             if (data) {
               this.board = data;
             } else {
-              this.initDefaultBoard(this.currentUser.uid);
+              this.initDefaultBoard();
             }
             this.cdr.markForCheck();
           }
@@ -86,7 +92,7 @@ export class BoardComponent implements OnInit, OnDestroy {
         error: (err) => {
           console.error('Error loading board:', err);
           if (this.currentUser) {
-            this.initDefaultBoard(this.currentUser.uid);
+            this.initDefaultBoard();
           }
           this.cdr.markForCheck();
         },
@@ -98,38 +104,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private initDefaultBoard(userId: string): void {
-    const defaultBoard: Board = {
-      title: 'My First Board',
-      columns: [
-        { id: this.generateId(), title: 'To Do', tasks: [] },
-        { id: this.generateId(), title: 'In Progress', tasks: [] },
-        { id: this.generateId(), title: 'Done', tasks: [] },
-      ],
-    };
-    this.updateBoard(defaultBoard);
-  }
-
-  private updateBoard(newBoard: Board): void {
-    if (!this.currentUser) return;
-
-    this.board = newBoard;
-    this.cdr.markForCheck();
-    this.boardService
-      .saveBoard(this.currentUser.uid, newBoard)
-      .catch((err) => console.error('Error saving board:', err));
-  }
-
-  private resetUIState(): void {
-    this.activeColumnId = null;
-    this.isAddingColumn = false;
-    this.newTaskTitle = '';
-    this.newColumnTitle = '';
-  }
-
-  private generateId(): string {
-    return crypto.randomUUID();
-  }
+  // --- AUTH ---
 
   public async logout(): Promise<void> {
     try {
@@ -160,7 +135,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.updateBoard(this.board);
   }
 
-  // --- TASK OPERATIONS ---
+  // --- TASKS ---
 
   public addTask(column: Column): void {
     const title = this.newTaskTitle.trim();
@@ -195,7 +170,31 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.newTaskTitle = '';
   }
 
-  // --- COLUMN OPERATIONS ---
+  public startEditTask(task: Task): void {
+    this.editingTaskId = task.id;
+    this.editingTaskTitle = task.title;
+  }
+
+  public saveEditTask(column: Column, task: Task): void {
+    if (!this.editingTaskId) return;
+
+    if (!this.editingTaskTitle.trim()) {
+      this.deleteTask(column.id, task.id);
+    } else {
+      task.title = this.editingTaskTitle;
+      this.updateBoard(this.board);
+    }
+
+    this.editingTaskId = null;
+    this.editingTaskTitle = '';
+  }
+
+  public cancelEditTask(): void {
+    this.editingTaskId = null;
+    this.editingTaskTitle = '';
+  }
+
+  // --- COLUMNS ---
 
   public addColumn(): void {
     const title = this.newColumnTitle.trim();
@@ -226,5 +225,33 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     this.board.columns = this.board.columns.filter((c) => c.id !== columnId);
     this.updateBoard(this.board);
+  }
+
+  // --- PRIVATE HELPERS ---
+
+  private initDefaultBoard(): void {
+    const defaultBoard: Board = {
+      title: 'My First Board',
+      columns: [
+        { id: this.generateId(), title: 'To Do', tasks: [] },
+        { id: this.generateId(), title: 'In Progress', tasks: [] },
+        { id: this.generateId(), title: 'Done', tasks: [] },
+      ],
+    };
+    this.updateBoard(defaultBoard);
+  }
+
+  private updateBoard(newBoard: Board): void {
+    if (!this.currentUser) return;
+
+    this.board = newBoard;
+    this.cdr.markForCheck();
+    this.boardService
+      .saveBoard(this.currentUser.uid, newBoard)
+      .catch((err) => console.error('Error saving board:', err));
+  }
+
+  private generateId(): string {
+    return crypto.randomUUID();
   }
 }
