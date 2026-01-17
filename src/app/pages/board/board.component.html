@@ -12,12 +12,10 @@
   <div class="board-wrapper" cdkDropListGroup cdkScrollable>
     @for (column of board.columns; track column.id) {
       <div class="column-container">
-        <div class="column-header">
-          <h2>{{ column.title }}</h2>
-          <button class="btn-delete-col" (click)="deleteColumn(column.id)">
-            🗑️
-          </button>
-        </div>
+        <app-column-header
+          [title]="column.title"
+          (delete)="deleteColumn(column.id)"
+        ></app-column-header>
 
         <div
           cdkDropList
@@ -26,36 +24,15 @@
           (cdkDropListDropped)="drop($event)"
         >
           @for (task of column.tasks; track task.id) {
-            <div class="task-box" cdkDrag>
-              @if (editingTaskId === task.id) {
-                <textarea
-                  [(ngModel)]="editingTaskTitle"
-                  class="edit-area"
-                  rows="2"
-                  autoFocus
-                  (keydown.enter)="
-                    saveEditTask(column, task); $event.preventDefault()
-                  "
-                  (keydown.escape)="cancelEditTask()"
-                  (blur)="saveEditTask(column, task)"
-                ></textarea>
-              } @else {
-                <span class="task-title" (click)="startEditTask(task)">
-                  {{ task.title }}
-                </span>
-
-                <button
-                  class="btn-delete-task"
-                  (click)="
-                    deleteTask(column.id, task.id); $event.stopPropagation()
-                  "
-                >
-                  ×
-                </button>
-              }
-
-              <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
-            </div>
+            <app-task-card
+              [task]="task"
+              [isEditing]="editingTaskId === task.id"
+              [editingTitle]="editingTaskTitle"
+              (startEdit)="startEditTask(task)"
+              (saveEdit)="saveEditTask(column, task)"
+              (cancelEdit)="cancelEditTask()"
+              (delete)="deleteTask(column.id, task.id)"
+            ></app-task-card>
           }
         </div>
 

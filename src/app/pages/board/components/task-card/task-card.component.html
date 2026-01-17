@@ -1,0 +1,23 @@
+<div class="task-box" cdkDrag>
+  @if (isEditing) {
+    @let editKey = task.id + "_editing";
+    <textarea
+      [(ngModel)]="editingTitle"
+      class="edit-area"
+      rows="2"
+      [id]="editKey"
+      autoFocus
+      (keydown.enter)="onSaveEdit(); $event.preventDefault()"
+      (keydown.escape)="onCancelEdit()"
+      (blur)="onSaveEdit()"
+    ></textarea>
+  } @else {
+    <span class="task-title" (click)="onStartEdit()">
+      {{ task.title }}
+    </span>
+
+    <button class="btn-delete-task" (click)="onDelete($event)">×</button>
+  }
+
+  <div *cdkDragPlaceholder class="cdk-drag-placeholder"></div>
+</div>

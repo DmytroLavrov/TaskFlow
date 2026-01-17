@@ -1,7 +1,5 @@
 import {
-  CdkDrag,
   CdkDragDrop,
-  CdkDragPlaceholder,
   CdkDropList,
   CdkDropListGroup,
   moveItemInArray,
@@ -23,6 +21,8 @@ import { Board, Column, Task } from '@core/models/board.model';
 import { AuthService } from '@core/services/auth.service';
 import { BoardService } from '@core/services/board.service';
 import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
+import { TaskCardComponent } from './components/task-card/task-card.component';
+import { ColumnHeaderComponent } from './components/column-header/column-header.component';
 
 @Component({
   selector: 'app-board',
@@ -30,9 +30,9 @@ import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
     CdkDropListGroup,
     CdkScrollable,
     CdkDropList,
-    CdkDrag,
-    CdkDragPlaceholder,
     FormsModule,
+    TaskCardComponent,
+    ColumnHeaderComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
