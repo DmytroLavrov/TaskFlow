@@ -23,6 +23,7 @@ import { Board, Column, Task } from '@core/models/board.model';
 import { AuthService } from '@core/services/auth.service';
 import { BoardService } from '@core/services/board.service';
 import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
+import { TaskCardComponent } from './components/task-card/task-card.component';
 
 @Component({
   selector: 'app-board',
@@ -33,6 +34,7 @@ import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
     CdkDrag,
     CdkDragPlaceholder,
     FormsModule,
+    TaskCardComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',

@@ -1,6 +1,5 @@
 @use "styles/variables" as v;
 @use "styles/mixins" as m;
-@use "sass:color";
 
 /* =========================
    Board
@@ -171,88 +170,6 @@
   gap: v.$gap-md;
 }
 
-.task-box {
-  padding: v.$gap-lg v.$gap-md;
-  background: v.$bg-card;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  color: v.$text-dark;
-  font-size: 14px;
-  line-height: 1.5;
-  cursor: move;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: v.$gap-md;
-  transition: all 0.2s ease;
-
-  span {
-    flex: 1;
-    word-break: break-word;
-  }
-
-  &:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-
-    .btn-delete-task {
-      opacity: 1;
-    }
-  }
-}
-
-.edit-area {
-  width: 100%;
-  border: 2px solid v.$primary-blue;
-  border-radius: v.$radius-sm;
-  padding: v.$gap-sm;
-  font-family: inherit;
-  font-size: inherit;
-  resize: none;
-  box-sizing: border-box;
-  display: block;
-  background-color: v.$bg-card;
-  color: v.$text-dark;
-  outline: none;
-}
-
-.task-title {
-  flex-grow: 1;
-  cursor: pointer;
-  word-wrap: break-word;
-  color: v.$text-dark;
-}
-
-.task-box:hover {
-  background-color: color.adjust(v.$bg-column, $lightness: 5%);
-  box-shadow: v.$shadow-hover;
-}
-
-.task-box:has(.edit-area) {
-  background-color: v.$bg-card;
-  box-shadow: 0 0 0 2px rgba(v.$primary-blue, 0.4);
-}
-
-.btn-delete-task {
-  background: none;
-  border: none;
-  color: v.$text-muted;
-  font-size: 1.3rem;
-  font-weight: bold;
-  cursor: pointer;
-  opacity: 0;
-  padding: 4px 8px;
-  border-radius: v.$radius-sm;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-
-  &:hover {
-    background-color: rgba(255, 59, 48, 0.1);
-    color: v.$danger;
-  }
-}
-
 /* =========================
    CDK Drag & Drop
    ========================= */
@@ -261,13 +178,6 @@
   border-radius: 8px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   opacity: 0.9;
-}
-
-.cdk-drag-placeholder {
-  background: rgba(0, 121, 191, 0.1);
-  border: 2px dashed rgba(0, 121, 191, 0.3);
-  border-radius: 8px;
-  min-height: 50px;
 }
 
 .cdk-drag-animating {
