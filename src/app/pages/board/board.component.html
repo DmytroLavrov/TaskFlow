@@ -12,12 +12,10 @@
   <div class="board-wrapper" cdkDropListGroup cdkScrollable>
     @for (column of board.columns; track column.id) {
       <div class="column-container">
-        <div class="column-header">
-          <h2>{{ column.title }}</h2>
-          <button class="btn-delete-col" (click)="deleteColumn(column.id)">
-            🗑️
-          </button>
-        </div>
+        <app-column-header
+          [title]="column.title"
+          (delete)="deleteColumn(column.id)"
+        ></app-column-header>
 
         <div
           cdkDropList
