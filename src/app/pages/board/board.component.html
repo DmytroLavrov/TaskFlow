@@ -9,79 +9,96 @@
     <button class="btn-logout" (click)="logout()">Logout 🚪</button>
   </div>
 
-  <div class="board-wrapper" cdkDropListGroup cdkScrollable>
-    @for (column of board.columns; track column.id) {
-      <div class="column-container">
-        <app-column-header
-          [title]="column.title"
-          (delete)="deleteColumn(column.id)"
-        ></app-column-header>
-
-        <div
-          cdkDropList
-          [cdkDropListData]="column.tasks"
-          class="task-list"
-          (cdkDropListDropped)="drop($event)"
-        >
-          @for (task of column.tasks; track task.id) {
-            <app-task-card
-              [task]="task"
-              [isEditing]="editingTaskId === task.id"
-              [editingTitle]="editingTaskTitle"
-              (startEdit)="startEditTask(task)"
-              (saveEdit)="saveEditTask(column, task)"
-              (cancelEdit)="cancelEditTask()"
-              (delete)="deleteTask(column.id, task.id)"
-            ></app-task-card>
-          }
-        </div>
-
-        <div class="add-task-footer">
-          @if (activeColumnId === column.id) {
-            <div class="add-form">
-              <textarea
-                [(ngModel)]="newTaskTitle"
-                placeholder="Title..."
-                rows="3"
-                class="input-area"
-                (keydown.enter)="addTask(column); $event.preventDefault()"
-              ></textarea>
-              <div class="actions">
-                <button (click)="addTask(column)" class="btn-add">Add</button>
-                <button (click)="cancelAdd()" class="btn-close">&times;</button>
-              </div>
+  <div class="board-wrapper" cdkScrollable>
+    <div
+      cdkDropList
+      cdkDropListOrientation="horizontal"
+      class="columns-list"
+      (cdkDropListDropped)="dropColumn($event)"
+    >
+      @for (column of board.columns; track column.id; let colIndex = $index) {
+        <div class="column-container" cdkDrag>
+          <div class="column-header" cdkDragHandle>
+            <div class="column-title-group">
+              <span class="drag-handle">⋮⋮</span>
+              <h2>{{ column.title }}</h2>
             </div>
-          } @else {
-            <button class="btn-show-add" (click)="showAddForm(column.id)">
-              + Add card
-            </button>
-          }
-        </div>
-      </div>
-    }
-
-    <div class="new-column-block">
-      @if (isAddingColumn) {
-        <div class="new-column-form">
-          <input
-            [(ngModel)]="newColumnTitle"
-            placeholder="List title..."
-            class="input-column"
-            autoFocus
-            (keydown.enter)="addColumn()"
-          />
-          <div class="actions">
-            <button (click)="addColumn()" class="btn-add">Add List</button>
-            <button (click)="isAddingColumn = false" class="btn-close">
-              &times;
+            <button class="btn-delete-col" (click)="deleteColumn(column.id)">
+              🗑️
             </button>
           </div>
+
+          <div
+            cdkDropList
+            [id]="'task-list-' + colIndex"
+            [cdkDropListData]="column.tasks"
+            [cdkDropListConnectedTo]="getConnectedLists()"
+            class="task-list"
+            (cdkDropListDropped)="drop($event)"
+          >
+            @for (task of column.tasks; track task.id) {
+              <app-task-card
+                [task]="task"
+                [isEditing]="editingTaskId === task.id"
+                [editingTitle]="editingTaskTitle"
+                (startEdit)="startEditTask(task)"
+                (saveEdit)="saveEditTask(column, task)"
+                (cancelEdit)="cancelEditTask()"
+                (delete)="deleteTask(column.id, task.id)"
+              ></app-task-card>
+            }
+          </div>
+
+          <div class="add-task-footer">
+            @if (activeColumnId === column.id) {
+              <div class="add-form">
+                <textarea
+                  [(ngModel)]="newTaskTitle"
+                  placeholder="Title..."
+                  rows="3"
+                  class="input-area"
+                  (keydown.enter)="addTask(column); $event.preventDefault()"
+                ></textarea>
+                <div class="actions">
+                  <button (click)="addTask(column)" class="btn-add">Add</button>
+                  <button (click)="cancelAdd()" class="btn-close">
+                    &times;
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <button class="btn-show-add" (click)="showAddForm(column.id)">
+                + Add card
+              </button>
+            }
+          </div>
+
+          <div *cdkDragPlaceholder class="column-drag-placeholder"></div>
         </div>
-      } @else {
-        <button class="btn-add-column" (click)="isAddingColumn = true">
-          + Add list
-        </button>
       }
+
+      <div class="new-column-block">
+        @if (isAddingColumn) {
+          <div class="new-column-form">
+            <input
+              [(ngModel)]="newColumnTitle"
+              placeholder="List title..."
+              class="input-column"
+              (keydown.enter)="addColumn()"
+            />
+            <div class="actions">
+              <button (click)="addColumn()" class="btn-add">Add List</button>
+              <button (click)="isAddingColumn = false" class="btn-close">
+                &times;
+              </button>
+            </div>
+          </div>
+        } @else {
+          <button class="btn-add-column" (click)="isAddingColumn = true">
+            + Add list
+          </button>
+        }
+      </div>
     </div>
   </div>
 </div>

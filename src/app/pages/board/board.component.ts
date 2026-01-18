@@ -1,7 +1,9 @@
 import {
+  CdkDrag,
   CdkDragDrop,
+  CdkDragHandle,
+  CdkDragPlaceholder,
   CdkDropList,
-  CdkDropListGroup,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
@@ -22,17 +24,17 @@ import { AuthService } from '@core/services/auth.service';
 import { BoardService } from '@core/services/board.service';
 import { Subject, takeUntil, switchMap, of, tap } from 'rxjs';
 import { TaskCardComponent } from './components/task-card/task-card.component';
-import { ColumnHeaderComponent } from './components/column-header/column-header.component';
 
 @Component({
   selector: 'app-board',
   imports: [
-    CdkDropListGroup,
     CdkScrollable,
     CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
+    CdkDragPlaceholder,
     FormsModule,
     TaskCardComponent,
-    ColumnHeaderComponent,
   ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.scss',
@@ -52,12 +54,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   // --- UI STATE ---
   public activeColumnId: string | null = null;
   public isAddingColumn = false;
-  public newTaskTitle: string = '';
-  public newColumnTitle: string = '';
+  public newTaskTitle = '';
+  public newColumnTitle = '';
 
   // --- TASK EDITING STATE ---
   public editingTaskId: string | null = null;
-  public editingTaskTitle: string = '';
+  public editingTaskTitle = '';
 
   // --- LIFECYCLE ---
   ngOnInit(): void {
@@ -135,6 +137,19 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.updateBoard(this.board);
   }
 
+  public dropColumn(event: CdkDragDrop<Column[]>): void {
+    moveItemInArray(
+      this.board.columns,
+      event.previousIndex,
+      event.currentIndex,
+    );
+    this.updateBoard(this.board);
+  }
+
+  public getConnectedLists(): string[] {
+    return this.board.columns.map((_, index) => `task-list-${index}`);
+  }
+
   // --- TASKS ---
 
   public addTask(column: Column): void {
@@ -173,6 +188,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   public startEditTask(task: Task): void {
     this.editingTaskId = task.id;
     this.editingTaskTitle = task.title;
+    this.cdr.markForCheck();
   }
 
   public saveEditTask(column: Column, task: Task): void {
@@ -187,11 +203,13 @@ export class BoardComponent implements OnInit, OnDestroy {
 
     this.editingTaskId = null;
     this.editingTaskTitle = '';
+    this.cdr.markForCheck();
   }
 
   public cancelEditTask(): void {
     this.editingTaskId = null;
     this.editingTaskTitle = '';
+    this.cdr.markForCheck();
   }
 
   // --- COLUMNS ---
