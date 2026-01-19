@@ -1,59 +1,80 @@
-# TaskFlow
+# 🚀 TaskFlow
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.1.
+**TaskFlow** is an interactive real-time Kanban dashboard (a Trello-like clone) for task management.
 
-## Development server
+The project is built to demonstrate the capabilities of modern **Angular 18+** combined with **Firebase** cloud technologies. The application supports a full task lifecycle, an intuitive Drag & Drop interface, and personalized authentication.
 
-To start a local development server, run:
+## 🔗 Live Demo
 
-```bash
-ng serve
-```
+👉 **[Open TaskFlow Live](https://task-flow-db.web.app)**
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🛠 Tech Stack
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+| Technology      | Usage                                                        |
+| :-------------- | :----------------------------------------------------------- |
+| **Angular 18+** | Standalone Components, Signals, Control Flow (`@if`, `@for`) |
+| **TypeScript**  | Strong typing, interfaces                                    |
+| **Angular CDK** | Advanced Drag & Drop (cards and columns)                     |
+| **Firebase**    | Firestore (real-time database), Authentication (Google)      |
+| **RxJS**        | Asynchronous data streams                                    |
+| **SCSS**        | Modular styling architecture, variables, mixins              |
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## ✨ Key Features
 
-```bash
-ng generate --help
-```
+* **🔐 Authentication:** Google Sign-In via Firebase Auth. Each user has access only to their own board.
+* **🤚 Drag & Drop:**
 
-## Building
+  * Move cards between columns.
+  * Reorder cards within a column.
+  * Drag and reorder columns horizontally.
+* **⚡ Real-time Updates:** All changes (movement, edits) are instantly synchronized across all user devices.
+* **✏️ Inline Editing:** Edit task titles directly on click (no modal dialogs).
+* **🗑 CRUD Operations:** Create and delete columns and tasks.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🏗 Architecture & Design Decisions
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The project follows **Clean Architecture** principles:
 
-## Running unit tests
+1. **Smart & Dumb Components:** Separation between pages (`pages/`) and reusable UI components.
+2. **Services:** All business logic and API communication is encapsulated in services (`AuthService`, `BoardService`).
+3. **Route Guards:** Protected routes using `CanActivate`. Unauthorized users cannot access the board.
+4. **Lazy Loading:** The board module loads only after authentication to improve initial load performance.
+5. **OnPush Strategy:** `ChangeDetectionStrategy.OnPush` is used to optimize rendering during Drag & Drop operations.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## 🚀 Getting Started (Local Setup)
 
-## Running end-to-end tests
+1. **Clone the repository:**
 
-For end-to-end (e2e) testing, run:
+   ```bash
+   git clone https://github.com/your-username/task-flow.git
+   cd task-flow
+   ```
 
-```bash
-ng e2e
-```
+2. **Install dependencies:**
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+   ```bash
+   npm install
+   ```
 
-## Additional Resources
+3. **Configure Firebase:**
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+   * Create a project in the [Firebase Console](https://console.firebase.google.com/).
+   * Enable **Authentication** (Google provider) and **Firestore**.
+   * Add your Firebase configuration
+     (or use `ng add @angular/fire` to connect your project).
+
+4. **Run the development server:**
+
+   ```bash
+   ng serve
+   ```
+
+   Open `http://localhost:4200`.
